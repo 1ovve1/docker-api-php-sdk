@@ -1,0 +1,17 @@
+{
+    "name": "lowel/docker-api-php-sdk",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Lowel\\Docker\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Andrey Bulavskiy",
+            "email": "10vvvvvv31@gmail.com"
+        }
+    ],
+    "require": {}
+}
