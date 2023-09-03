@@ -5,6 +5,9 @@ namespace Lowel\Docker;
 use Lowel\Docker\Requests\RequestFactoryInterface;
 use Lowel\Docker\Requests\RequestFactoryJson;
 use Lowel\Docker\Requests\RequestTypeEnum;
+use Lowel\Docker\Response\DTO\Container;
+use Lowel\Docker\Response\DTOFactory;
+use Lowel\Docker\Response\ResponseParser;
 use Psr\Http\Client\ClientInterface as HttpClientInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -14,6 +17,8 @@ class Client implements ClientInterface
     protected HttpClientInterface $httpClient;
     /** @var RequestFactoryInterface  */
     protected RequestFactoryInterface $requestFactory;
+    /** @var DTOFactory  */
+    protected DTOFactory $dtoFactory;
 
     /**
      * @param HttpClientInterface $httpClient - PSR Http client instance
@@ -23,12 +28,13 @@ class Client implements ClientInterface
         $this->httpClient = $httpClient;
 
         $this->requestFactory = new RequestFactoryJson();
+        $this->dtoFactory = new DTOFactory(new ResponseParser());
     }
 
     /**
      * @inheritDoc
      */
-    function containerList(bool $all = false, ?int $limit = null, bool $size = false, ?string $filters = null): ResponseInterface
+    function containerList(bool $all = false, ?int $limit = null, bool $size = false, ?string $filters = null): array
     {
         $request = $this->requestFactory->get(
             RequestTypeEnum::CONTAINER_LIST,
@@ -36,13 +42,15 @@ class Client implements ClientInterface
             compact('all', 'limit', 'size', 'filters')
         );
 
-        return $this->httpClient->sendRequest($request);
+        $response = $this->httpClient->sendRequest($request);
+
+        return $this->dtoFactory->createDockerCollectionFromResponse($response);
     }
 
     /**
      * @inheritDoc
      */
-    function containerInspect(string $id, bool $size = false): ResponseInterface
+    function containerInspect(string $id, bool $size = false): Container
     {
         $request = $this->requestFactory->get(
             RequestTypeEnum::CONTAINER_INSPECT,
@@ -50,7 +58,9 @@ class Client implements ClientInterface
             compact('size')
         );
 
-        return $this->httpClient->sendRequest($request);
+        $response = $this->httpClient->sendRequest($request);
+
+        return $this->dtoFactory->createContainerFromResponse($response);
     }
 
     /**

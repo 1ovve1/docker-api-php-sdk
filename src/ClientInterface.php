@@ -2,6 +2,7 @@
 
 namespace Lowel\Docker;
 
+use Lowel\Docker\Response\DTO\Container;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -14,7 +15,7 @@ interface ClientInterface
      * @param int|null $limit - Return this number of most recently created containers, including non-running ones.
      * @param bool $size - Return the size of container as fields SizeRw and SizeRootFs.
      * @param string|null $filters - Filters to process on the container list, encoded as JSON (a map[string][]string). For example, {"status": ["paused"]} will only return paused containers.
-     * @return ResponseInterface
+     * @return array<Container>
      * @throws ClientExceptionInterface
      *
      */
@@ -23,20 +24,20 @@ interface ClientInterface
         ?int $limit = null,
         bool $size = false,
         ?string $filters = null
-    ): ResponseInterface;
+    ): array;
 
     /**
      * Inspect for specific container
      *
      * @param string $id - ID or name of the container
      * @param bool $size - Return the size of container as fields SizeRw and SizeRootFs
-     * @return ResponseInterface
+     * @return Container
      * @throws ClientExceptionInterface
      */
     function containerInspect(
         string $id,
         bool $size = false
-    ): ResponseInterface;
+    ): Container;
 
     /**
      * Start specific container

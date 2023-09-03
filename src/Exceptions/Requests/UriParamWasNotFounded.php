@@ -15,9 +15,9 @@ class UriParamWasNotFounded extends DockerClientException
      */
     public function __construct(string $uri, string $paramName, array $paramsMap)
     {
-        $message = sprintf(
+        $message = $this->format(
             self::MESSAGE,
-            $paramName, $uri, $this->printArray($paramsMap)
+            $uri, $paramName, $this->printAsString($paramsMap)
         );
 
         parent::__construct($message);
