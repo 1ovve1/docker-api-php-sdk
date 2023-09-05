@@ -3,6 +3,7 @@
 namespace Lowel\Docker\Response;
 
 use Lowel\Docker\Response\DTO\Container;
+use Lowel\Docker\Response\DTO\ContainerListItem;
 use Psr\Http\Message\ResponseInterface;
 
 class DTOFactory
@@ -20,7 +21,7 @@ class DTOFactory
 
     /**
      * @param ResponseInterface $response
-     * @return array<Container>
+     * @return array<ContainerListItem>
      */
     function createDockerCollectionFromResponse(ResponseInterface $response): array
     {
@@ -28,7 +29,7 @@ class DTOFactory
         $arrayData = $this->responseParser->parseBodyAsJson($response);
 
         foreach ($arrayData as $containerInfo) {
-            $collection[] = new Container($containerInfo);
+            $collection[] = new ContainerListItem($containerInfo);
         }
 
         return $collection;

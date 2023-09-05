@@ -3,10 +3,23 @@
 namespace Lowel\Docker\Exceptions;
 
 use RuntimeException;
+use Throwable;
 use function print_r, sprintf;
 
 class DockerClientException extends RuntimeException
 {
+    const DEFAULT_MESSAGE = "Docker error";
+
+    /**
+     * @param string $message
+     * @param int $code
+     * @param Throwable|null $previous
+     */
+    public function __construct(string $message = self::DEFAULT_MESSAGE, int $code = 0, ?Throwable $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+    }
+
     /**
      * Convert given array into string
      *

@@ -2,10 +2,15 @@
 
 namespace Lowel\Docker;
 
-use Psr\Http\Client\ClientExceptionInterface;
-use Psr\Http\Message\ResponseInterface;
+use Lowel\Docker\Exceptions\ContainerAlreadyStartedException;
+use Lowel\Docker\Exceptions\ContainerAlreadyStoppedException;
+use Lowel\Docker\Exceptions\ContainerNotFoundException;
+use Lowel\Docker\Exceptions\DockerClientException;
+use Lowel\Docker\Exceptions\DockerClientInvalidParamsException;
+use Lowel\Docker\Response\DTO\Container;
+use Lowel\Docker\Response\DTO\ContainerListItem;
 
-interface ClientInterface
+interface ClientResponseHandlerInterface
 {
     /**
      * Return list of containers
@@ -15,15 +20,15 @@ interface ClientInterface
      * @param bool $size - Return the size of container as fields SizeRw and SizeRootFs.
      * @param string|null $filters - Filters to process on the container list, encoded as JSON (a map[string][]string). For example, {"status": ["paused"]} will only return paused containers.
      *
-     * @return ResponseInterface
-     * @throws ClientExceptionInterface
+     * @return array<ContainerListItem>
+     * @throws DockerClientException|DockerClientInvalidParamsException
      */
     function containerList(
-        bool $all = false,
-        ?int $limit = null,
-        bool $size = false,
+        bool    $all = false,
+        ?int    $limit = null,
+        bool    $size = false,
         ?string $filters = null
-    ): ResponseInterface;
+    ): array;
 
     /**
      * Inspect for specific container
@@ -31,13 +36,13 @@ interface ClientInterface
      * @param string $id - ID or name of the container
      * @param bool $size - Return the size of container as fields SizeRw and SizeRootFs
      *
-     * @return ResponseInterface
-     * @throws ClientExceptionInterface
+     * @return Container
+     * @throws DockerClientException|ContainerNotFoundException|DockerClientInvalidParamsException
      */
     function containerInspect(
         string $id,
-        bool $size = false
-    ): ResponseInterface;
+        bool   $size = false
+    ): Container;
 
     /**
      * Start specific container
@@ -45,13 +50,13 @@ interface ClientInterface
      * @param string $id - ID or name of the container
      * @param string|null $detachKeys - Override the key sequence for detaching a container. Format is a single character [a-Z] or ctrl-<value> where <value> is one of: a-z, @, ^, [, , or _.
      *
-     * @return ResponseInterface
-     * @throws ClientExceptionInterface
+     * @return true
+     * @throws DockerClientException|ContainerNotFoundException|ContainerAlreadyStartedException|DockerClientInvalidParamsException
      */
     function containerStart(
-        string $id,
+        string  $id,
         ?string $detachKeys = null
-    ): ResponseInterface;
+    ): bool;
 
     /**
      * Stop specific container
@@ -60,14 +65,14 @@ interface ClientInterface
      * @param string|null $signal - Signal to send to the container as an integer or string (e.g. SIGINT).
      * @param int|null $t - Number of seconds to wait before killing the container
      *
-     * @return ResponseInterface
-     * @throws ClientExceptionInterface
+     * @return true
+     * @throws DockerClientException|ContainerNotFoundException|ContainerAlreadyStoppedException|DockerClientInvalidParamsException
      */
     function containerStop(
-        string $id,
+        string  $id,
         ?string $signal = null,
-        ?int $t = null
-    ): ResponseInterface;
+        ?int    $t = null
+    ): bool;
 
     /**
      * Restart specific container
@@ -76,12 +81,12 @@ interface ClientInterface
      * @param string|null $signal - Signal to send to the container as an integer or string (e.g. SIGINT).
      * @param int|null $t - Number of seconds to wait before killing the container
      *
-     * @return ResponseInterface
-     * @throws ClientExceptionInterface
+     * @return true
+     * @throws DockerClientException|ContainerNotFoundException|DockerClientInvalidParamsException
      */
     function containerRestart(
-        string $id,
+        string  $id,
         ?string $signal = null,
-        ?int $t = null
-    ): ResponseInterface;
+        ?int    $t = null
+    ): bool;
 }

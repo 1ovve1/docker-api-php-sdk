@@ -2,12 +2,11 @@
 
 namespace Lowel\Docker;
 
+use JsonException;
 use Lowel\Docker\Requests\RequestFactoryInterface;
 use Lowel\Docker\Requests\RequestFactoryJson;
 use Lowel\Docker\Requests\RequestTypeEnum;
-use Lowel\Docker\Response\DTO\Container;
-use Lowel\Docker\Response\DTOFactory;
-use Lowel\Docker\Response\ResponseParser;
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface as HttpClientInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -17,8 +16,7 @@ class Client implements ClientInterface
     protected HttpClientInterface $httpClient;
     /** @var RequestFactoryInterface  */
     protected RequestFactoryInterface $requestFactory;
-    /** @var DTOFactory  */
-    protected DTOFactory $dtoFactory;
+
 
     /**
      * @param HttpClientInterface $httpClient - PSR Http client instance
@@ -28,13 +26,19 @@ class Client implements ClientInterface
         $this->httpClient = $httpClient;
 
         $this->requestFactory = new RequestFactoryJson();
-        $this->dtoFactory = new DTOFactory(new ResponseParser());
     }
 
     /**
      * @inheritDoc
+     * @param bool $all
+     * @param int|null $limit
+     * @param bool $size
+     * @param string|null $filters
+     * @return ResponseInterface
+     * @throws JsonException
+     * @throws ClientExceptionInterface
      */
-    function containerList(bool $all = false, ?int $limit = null, bool $size = false, ?string $filters = null): array
+    function containerList(bool $all = false, ?int $limit = null, bool $size = false, ?string $filters = null): ResponseInterface
     {
         $request = $this->requestFactory->get(
             RequestTypeEnum::CONTAINER_LIST,
@@ -42,15 +46,13 @@ class Client implements ClientInterface
             compact('all', 'limit', 'size', 'filters')
         );
 
-        $response = $this->httpClient->sendRequest($request);
-
-        return $this->dtoFactory->createDockerCollectionFromResponse($response);
+        return $this->httpClient->sendRequest($request);
     }
 
     /**
      * @inheritDoc
      */
-    function containerInspect(string $id, bool $size = false): Container
+    function containerInspect(string $id, bool $size = false): ResponseInterface
     {
         $request = $this->requestFactory->get(
             RequestTypeEnum::CONTAINER_INSPECT,
@@ -58,9 +60,7 @@ class Client implements ClientInterface
             compact('size')
         );
 
-        $response = $this->httpClient->sendRequest($request);
-
-        return $this->dtoFactory->createContainerFromResponse($response);
+        return $this->httpClient->sendRequest($request);
     }
 
     /**

@@ -21,8 +21,19 @@ class ClientFactory
         ];
     }
 
+    /**
+     * @return ClientInterface
+     */
     function getClient(): ClientInterface
     {
         return new Client(new \GuzzleHttp\Client($this->config));
+    }
+
+    /**
+     * @return ClientResponseHandlerInterface
+     */
+    function getClientWithHandler(): ClientResponseHandlerInterface
+    {
+        return new ClientResponseHandler($this->getClient());
     }
 }
