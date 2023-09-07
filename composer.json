@@ -1,5 +1,6 @@
 {
     "name": "lowel/docker-api-php-sdk",
+    "description": "Docker Engine API PHP SDK",
     "type": "library",
     "license": "MIT",
     "autoload": {
