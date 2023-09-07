@@ -21,11 +21,11 @@ class Client implements ClientInterface
     /**
      * @param HttpClientInterface $httpClient - PSR Http client instance
      */
-    public function __construct(HttpClientInterface $httpClient)
+    public function __construct(HttpClientInterface $httpClient, RequestFactoryInterface $requestFactory)
     {
         $this->httpClient = $httpClient;
 
-        $this->requestFactory = new RequestFactoryJson();
+        $this->requestFactory = $requestFactory;
     }
 
     /**

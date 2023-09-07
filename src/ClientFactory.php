@@ -2,6 +2,12 @@
 
 namespace Lowel\Docker;
 
+use Lowel\Docker\Async\AsyncClient;
+use Lowel\Docker\Async\AsyncClientInterface;
+use Lowel\Docker\Async\AsyncClientResponseHandler;
+use Lowel\Docker\Async\AsyncClientResponseHandlerInterface;
+use Lowel\Docker\Requests\RequestFactoryJson;
+
 class ClientFactory
 {
     const DEFAULT_DOCKER_API_VERSION = '1.41v';
@@ -26,7 +32,7 @@ class ClientFactory
      */
     function getClient(): ClientInterface
     {
-        return new Client(new \GuzzleHttp\Client($this->config));
+        return new Client($this->initGuzzle(), new RequestFactoryJson());
     }
 
     /**
@@ -35,5 +41,31 @@ class ClientFactory
     function getClientWithHandler(): ClientResponseHandlerInterface
     {
         return new ClientResponseHandler($this->getClient());
+    }
+
+    /**
+     * @return AsyncClientInterface
+     */
+    function getAsyncClient(): AsyncClientInterface
+    {
+        return new AsyncClient($this->initGuzzle(), new RequestFactoryJson());
+    }
+
+    /**
+     * @return AsyncClientResponseHandlerInterface
+     */
+    function getAsyncClientWithHandler(): AsyncClientResponseHandlerInterface
+    {
+        return new AsyncClientResponseHandler($this->getAsyncClient());
+    }
+
+    /**
+     * Default init with Guzzle
+     *
+     * @return \GuzzleHttp\Client
+     */
+    protected function initGuzzle(): \GuzzleHttp\Client
+    {
+        return new \GuzzleHttp\Client($this->config);
     }
 }
