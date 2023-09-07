@@ -1,5 +1,6 @@
 {
     "name": "lowel/docker-api-php-sdk",
+    "description": "Docker Engine API PHP SDK",
     "type": "library",
     "license": "MIT",
     "autoload": {
@@ -13,5 +14,18 @@
             "email": "10vvvvvv31@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "php": "^8.1",
+        "guzzlehttp/guzzle": "^7.0",
+        "ext-curl": "*",
+        "symfony/http-foundation": "^6.3"
+    },
+    "require-dev": {
+        "pestphp/pest": "^2.16"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
 }
