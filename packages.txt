@@ -1,0 +1,12 @@
+php.x86_64                                           8.2.19-1.fc39.remi                  @remi-modular                                 
+php-cli.x86_64                                       8.2.19-1.fc39.remi                  @remi-modular                                 
+php-common.x86_64                                    8.2.19-1.fc39.remi                  @remi-modular                                 
+php-fpm.x86_64                                       8.2.19-1.fc39.remi                  @remi-modular                                 
+php-gd.x86_64                                        8.2.19-1.fc39.remi                  @remi-modular                                 
+php-mbstring.x86_64                                  8.2.19-1.fc39.remi                  @remi-modular                                 
+php-opcache.x86_64                                   8.2.19-1.fc39.remi                  @remi-modular                                 
+php-pdo.x86_64                                       8.2.19-1.fc39.remi                  @remi-modular                                 
+php-pecl-zip.x86_64                                  1.22.3-1.fc39.remi.8.2              @remi-modular                                 
+php-process.x86_64                                   8.2.19-1.fc39.remi                  @remi-modular                                 
+php-sodium.x86_64                                    8.2.19-1.fc39.remi                  @remi-modular                                 
+php-xml.x86_64                                       8.2.19-1.fc39.remi                  @remi-modular                                 
